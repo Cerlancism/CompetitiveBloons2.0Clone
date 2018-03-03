@@ -1,28 +1,37 @@
 {
-  "//1": "describes your app and its dependencies",
-  "//2": "https://docs.npmjs.com/files/package.json",
-  "//3": "updating this file will download and update your packages",
-
-  "name": "my-glitch-app",
-  "version": "0.0.1",
-  "description": "What am I about?",
-  "main": "server.js",
+  "name": "comp-bot",
+  "version": "1.0.0",
+  "description": "A utility bot for competitive Bloons TD Battles.",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "express": "^4.16.2"
+    "test": "!test",
+    "start": "node src/index.js"
   },
   "engines": {
-    "node": "8.x"
+    "node": "8.4.0"
   },
   "repository": {
-    "url": "https://glitch.com/edit/#!/welcome-project"
+    "type": "git",
+    "url": "git+https://github.com/lumitedubbz/compt-bot.git"
   },
-  "license": "MIT",
   "keywords": [
-    "node",
-    "glitch",
-    "express"
-  ]
+    "bloons",
+    "bloons",
+    "td",
+    "bloons",
+    "td",
+    "battles",
+    "competetive"
+  ],
+  "author": " </LumiteDubbz>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lumitedubbz/compt-bot/issues"
+  },
+  "homepage": "https://github.com/lumitedubbz/compt-bot#readme",
+  "dependencies": {
+    "discord.js": "^11.2.1",
+    "patron.js": "^2.5.5",
+    "express": "^4.16.2"
+  }
 }
