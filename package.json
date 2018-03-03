@@ -1,0 +1,37 @@
+{
+  "name": "comp-bot",
+  "version": "1.0.0",
+  "description": "A utility bot for competitive Bloons TD Battles.",
+  "main": "index.js",
+  "scripts": {
+    "test": "!test",
+    "start": "node src/index.js"
+  },
+  "engines": {
+    "node": "8.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lumitedubbz/compt-bot.git"
+  },
+  "keywords": [
+    "bloons",
+    "bloons",
+    "td",
+    "bloons",
+    "td",
+    "battles",
+    "competetive"
+  ],
+  "author": " </LumiteDubbz>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lumitedubbz/compt-bot/issues"
+  },
+  "homepage": "https://github.com/lumitedubbz/compt-bot#readme",
+  "dependencies": {
+    "discord.js": "^11.2.1",
+    "patron.js": "^2.5.5",
+    "express": "^4.16.2"
+  }
+}
