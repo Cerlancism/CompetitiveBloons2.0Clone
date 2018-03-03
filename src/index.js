@@ -5,14 +5,21 @@ const client = require('./structures/client.js');
 const registry = require('./structures/registry.js');
 const http = require('http');
 const express = require('express');
+var config = require('./config.json')
 const app = express();
-app.get("/", (request, response) => {
+
+console.log(config);
+
+app.get("/", (request, response) =>
+{
   console.log(Date.now() + " Ping Received");
   response.sendStatus(200);
 });
 app.listen(process.env.PORT);
-setInterval(() => {
-  http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
+setInterval(() =>
+{
+  //http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
+  console.log(`${process.env.PROJECT_DOMAIN}`);
 }, 280000);
 
 registry.registerDefaultTypeReaders();                          // Register the default type readers.
@@ -21,5 +28,5 @@ registry.registerCommandsIn(path.join(__dirname, 'commands'));  // Register all 
 
 EventService.run();                                             // Run every single file inside the events folder.
 
-client.login(process.env.TOKEN)                                 // Login to the client.
+client.login(config.DiscordToken)                                 // Login to the client.
   .catch((err) => Logger.handleError(err));                     // Handle the error.
