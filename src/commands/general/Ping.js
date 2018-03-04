@@ -1,9 +1,7 @@
 const patron = require('patron.js');
 const Discord = require('discord.js');
-const Message = Discord.Message;
 const constants = require('../../utility/Constants.js');
-
-var DiscordMessage = Discord.Message;
+const { Message } = Discord;
 
 class Ping extends patron.Command
 {
@@ -16,29 +14,26 @@ class Ping extends patron.Command
     });
   }
 
-
   /**
-   * 
-   * @param {Message} msg
+   * @param {Message} param
    */
-  async run(msg)
+  async run(param)
   {
-    var randomColour = constants.colourArray[Math.floor(Math.random() * constants.colourArray.length)];
-
-    var responseEmbed = new Discord.RichEmbed();
-    responseEmbed.setAuthor("Test Command")
-    responseEmbed.setColor(randomColour)
-    responseEmbed.setDescription("Pong!")
-    var response = msg.channel.send(responseEmbed);
-    return response.then(
-      /**
-       * @param {Message} m
-       */
-      (m) =>
-      {
-        var delay = m.createdAt.getTime() - msg.createdAt.getTime();
-        m.edit("`Bot delay: " + delay + " ms`", responseEmbed);
-      })
+    return param.channel.send("`Loading...`")
+      .then(
+        /**
+         * @param {Message} response
+         */
+        (response) =>
+        {
+          var randomColour = constants.colourArray[Math.floor(Math.random() * constants.colourArray.length)];
+          var embed = new Discord.RichEmbed();
+          embed.setAuthor("Test Command");
+          embed.setColor(randomColour);
+          embed.setDescription("Pong!");
+          var delay = response.createdAt.getTime() - param.createdAt.getTime();
+          response.edit(`\`Bot delay: ${delay} ms\``, embed);
+        });
   }
 }
 
