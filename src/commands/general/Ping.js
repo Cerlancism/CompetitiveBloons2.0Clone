@@ -1,39 +1,45 @@
-const patron = require('patron.js');
+const Patron = require('patron.js');
 const Discord = require('discord.js');
-const constants = require('../../utility/Constants.js');
+const Constants = require('../../utility/Constants.js');
+const StringUtil = require('../../utility/StringUltil.js')
+const Client = require('../../structures/client.js')
 const { Message } = Discord;
 
-class Ping extends patron.Command
+class Ping extends Patron.Command
 {
   constructor()
   {
-    super({
-      names: ['ping'],
-      groupName: 'general',
-      description: 'Test Command'
-    });
+    super(
+      {
+        names: ['ping'],
+        groupName: 'general',
+        description: 'Test Command',
+        guildOnly: false
+      });
   }
 
-  /**
-   * @param {Message} param
+  /** 
+   * @param {Message} param 
    */
   async run(param)
   {
-    return param.channel.send("`Loading...`")
-      .then(
-        /**
-         * @param {Message} response
-         */
-        (response) =>
-        {
-          var randomColour = constants.colourArray[Math.floor(Math.random() * constants.colourArray.length)];
-          var embed = new Discord.RichEmbed();
-          embed.setAuthor("Test Command");
-          embed.setColor(randomColour);
-          embed.setDescription("Pong!");
-          var delay = response.createdAt.getTime() - param.createdAt.getTime();
-          response.edit(`\`Bot delay: ${delay} ms\``, embed);
-        });
+    /**@type {Message} */
+    var response = await param.channel.send(StringUtil.markdownCodeLine("Loading..."));
+
+    var randomColour = Constants.getRandomColor();
+    var embed = new Discord.RichEmbed();
+    embed.setAuthor("Test Command");
+    embed.setColor(randomColour);
+    embed.setDescription("Pong!");
+    var BotDelay = response.createdAt.getTime() - param.createdAt.getTime();
+
+    var dbPingStart = Date.now();
+    var pingResponse = await Client.database.db.admin().ping();
+    var DatabaseDelay = pingResponse.ok == 1 ? (Date.now() - dbPingStart) : "Error";
+
+    return await response.edit(
+      `${StringUtil.markdownCodeLine(`Bot delay: ${BotDelay} ms`)}\n` +
+      `${StringUtil.markdownCodeLine(`Database delay: ${DatabaseDelay} ms`)}`, embed);
   }
 }
 

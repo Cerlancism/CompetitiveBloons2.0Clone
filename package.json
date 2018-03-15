@@ -1,7 +1,7 @@
 {
   "name": "comp-bot",
   "version": "1.0.0",
-  "description": "A utility bot for competitive Bloons TD Battles.",
+  "description": "An utility bot for competitive Bloons TD Battles.",
   "main": "index.js",
   "scripts": {
     "test": "!test",
@@ -31,7 +31,8 @@
   "homepage": "https://github.com/lumitedubbz/compt-bot#readme",
   "dependencies": {
     "discord.js": "^11.2.1",
-    "patron.js": "^2.5.5",
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "mongodb": "^3.0.4",
+    "patron.js": "^2.5.5"
   }
 }

@@ -1,25 +1,26 @@
+const path = require('path');
+const http = require('http');
+const express = require('express');
+
 const Logger = require('./utility/Logger.js');
 const NumberUtil = require('./utility/NumberUtil')
-const path = require('path');
 const EventService = require('./services/EventService.js');
 const client = require('./structures/client.js');
 const registry = require('./structures/registry.js');
-const http = require('http');
-const express = require('express');
-var config = require('../config.json');
+
 const app = express();
 
-console.log(Logger.ConsoleColors.Reset, "Starting");
+console.log(Logger._ConsoleColors.Reset, "Starting");
 
 app.get("/", (request, response) =>
 {
   console.log(Date.now() + " Ping Received");
   response.sendStatus(200);
 });
+
 app.listen(process.env.PORT);
 setInterval(() =>
 {
-  //http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
   Logger.log(`Uptime: ${NumberUtil.msToTime(client.uptime)}`, 'INFO');
 }, 60000);
 
@@ -29,5 +30,4 @@ registry.registerCommandsIn(path.join(__dirname, 'commands'));  // Register all 
 
 EventService.run();                                             // Run every single file inside the events folder.
 
-client.login(config.DiscordToken)                                 // Login to the client.
-  .catch((err) => Logger.handleError(err));                     // Handle the error.
+client.initialize();

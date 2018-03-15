@@ -4,7 +4,7 @@ class Logger
 {
   constructor()
   {
-    this.ConsoleColors =
+    this._ConsoleColors =
       {
         FgGreen: "\x1b[32m",
         FgCyan: "\x1b[36m",
@@ -12,24 +12,39 @@ class Logger
         BgBlack: "\x1b[40m",
         Reset: "\x1b[0m"
       }
+
+    this.LogLevel =
+      {
+        INFO: 'INFO',
+        DEBUG: 'DEBUG',
+        ERROR: 'ERROR',
+      }
   }
 
   log(message, level)
   {
     const date = new Date();
-    const formattedMessage = this.formatMessage(message, level, date);
+    const formattedMessage = this._formatMessage(message, level, date);
 
     console.log(this._getConsoleColors(level), formattedMessage);
   }
 
-  formatMessage(message, level, date)
+  debug(message)
   {
-    return DateUtil.UTCTime(date) + ' [' + level + '] ' + message;
+    const date = new Date();
+    const formattedMessage = this._formatMessage(message, this.LogLevel.DEBUG, date);
+
+    console.log(this._getConsoleColors(this.LogLevel.DEBUG), formattedMessage);
   }
 
   handleError(err)
   {
-    return this.log(err.stack, 'ERROR');
+    this.log(err.stack, 'ERROR');
+  }
+
+  _formatMessage(message, level, date)
+  {
+    return DateUtil.UTCTime(date) + ' [' + level + '] ' + message;
   }
 
   _getConsoleColors(level)
@@ -37,19 +52,19 @@ class Logger
     switch (level)
     {
       case 'INFO':
-        return this.ConsoleColors.FgGreen
+        return this._ConsoleColors.FgGreen
         break;
 
       case 'DEBUG':
-        return this.ConsoleColors.FgCyan
+        return this._ConsoleColors.FgCyan
         break;
 
       case 'ERROR':
-        return this.ConsoleColors.FgRed;
+        return this._ConsoleColors.FgRed;
         break;
 
       default:
-        return this.ConsoleColors.Reset;
+        return this._ConsoleColors.Reset;
         break;
     }
   }

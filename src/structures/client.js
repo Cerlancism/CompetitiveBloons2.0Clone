@@ -1,3 +1,25 @@
-const discord = require('discord.js');
+const Discord = require('discord.js');
+const Logger = require('../utility/Logger');
+const Database = require('../database/Database.js');
 
-module.exports = new discord.Client();
+class client extends Discord.Client
+{
+    constructor()
+    {
+        super(
+            {
+                fetchAllMembers: true,
+                disableEveryone: true,
+            })
+        this.config = require('../../config.json');
+        this.database = new Database();
+    }
+
+    async initialize()
+    {
+        await this.login(this.config.DiscordToken).catch((err) => Logger.handleError(err));
+        await this.database.initialize(this.config.DatabaseURL);
+    }
+}
+
+module.exports = new client();
