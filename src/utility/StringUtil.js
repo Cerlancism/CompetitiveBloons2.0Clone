@@ -1,5 +1,17 @@
 class StringUtil
 {
+    constructor()
+    {
+        this.SyntaxType =
+            {
+                CSharp: "csharp",
+                cpp: "cpp",
+                SQL: "sql",
+                JavaScript: "js",
+                YAML: "yaml",
+                Inform7: "inform7"
+            }
+    }
     /**
      * 
      * @param {String} string 

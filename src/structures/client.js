@@ -18,7 +18,7 @@ class client extends Discord.Client
     async initialize()
     {
         await this.login(this.config.DiscordToken).catch((err) => Logger.handleError(err));
-        await this.database.initialize(this.config.DatabaseURL);
+        await this.database.initialize(this.config.DatabaseURL).catch((err) => Logger.handleError(err));
     }
 }
 

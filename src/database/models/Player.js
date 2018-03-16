@@ -9,8 +9,9 @@ class Player
      * @param {Number} wins
      * @param {Number} loss
      * @param {String[]} seriesHistoryIds
+     * @param {Number[]} eloHistory
      */
-    constructor(id = "", discordId = "", name = "", elo = 1200, wins = 0, loss = 0, seriesHistoryIds = [])
+    constructor(id = "", discordId = "", name = "", elo = 1200, wins = 0, loss = 0, seriesHistoryIds = [], eloHistory = [])
     {
         this._id = id;
         this.discordId = discordId;
@@ -19,6 +20,7 @@ class Player
         this.wins = wins;
         this.loss = loss;
         this.seriesHistoryIds = seriesHistoryIds;
+        this.eloHistory = eloHistory;
         this.isRemoved = false;
     }
 }

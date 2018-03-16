@@ -31,15 +31,16 @@ class Logger
 
   debug(message)
   {
-    const date = new Date();
-    const formattedMessage = this._formatMessage(message, this.LogLevel.DEBUG, date);
-
-    console.log(this._getConsoleColors(this.LogLevel.DEBUG), formattedMessage);
+    this.log(message, this.LogLevel.DEBUG);
   }
 
+  /**
+   * Outputs catched error message and stack.
+   * @param {Error} err 
+   */
   handleError(err)
   {
-    this.log(err.stack, 'ERROR');
+    this.log(err.message + "\n" + err.stack, 'ERROR');
   }
 
   _formatMessage(message, level, date)
