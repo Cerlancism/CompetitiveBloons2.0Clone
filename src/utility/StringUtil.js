@@ -16,7 +16,7 @@ class StringUtil
      * 
      * @param {String} string 
      */
-    markdownCodeLine(string)
+    markdownCodeLinify(string)
     {
         return "`" + string.replace("`", '\\`') + "`"
     }
@@ -26,9 +26,23 @@ class StringUtil
      * @param {String} string 
      * @param {String} syntaxType 
      */
-    markdownCodeBlock(string, syntaxType = "")
+    markdownCodeBlockify(string, syntaxType = "")
     {
         return "```" + syntaxType + "\n" + string.replace("```", '\\```') + "\n```"
+    }
+
+    /**
+     * 
+     * @param {String} string 
+     */
+    extractOneDigitSet(string)
+    {
+        return string.match(/\d+/)[0];
+    }
+
+    boldify(string)
+    {
+        return '**' + string + '**';
     }
 }
 

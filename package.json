@@ -1,7 +1,7 @@
 {
   "name": "comp-bot",
   "version": "1.0.0",
-  "description": "An utility bot for competitive Bloons TD Battles.",
+  "description": "A utility bot for competitive Bloons TD Battles.",
   "main": "index.js",
   "scripts": {
     "test": "!test",

@@ -18,7 +18,7 @@ class BotAdmin extends Precondition
             return PreconditionResult.fromSuccess();
         }
 
-        return PreconditionResult.fromError(cmd, 'You must be an bot administrator in order to use this command.');
+        return PreconditionResult.fromError(cmd, 'You must be a bot administrator in order to use this command.');
     }
 }
 

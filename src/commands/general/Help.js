@@ -21,7 +21,7 @@ class Help extends Patron.Command
     var responseEmbed = new Discord.RichEmbed();
     responseEmbed.setAuthor("Help");
     responseEmbed.setColor(randomColour);
-    responseEmbed.setDescription("This is an utility bot for competitive Bloons TD Battles.");
+    responseEmbed.setDescription("This is a utility bot for competitive Bloons TD Battles.");
     responseEmbed.addField("Commands", "`!map` \n`!strat`\n`!ping`");
     return msg.channel.send(responseEmbed);
   }

@@ -25,6 +25,7 @@ setInterval(() =>
 }, 60000);
 
 registry.registerDefaultTypeReaders();                          // Register the default type readers.
+registry.registerTypeReadersIn(path.join(__dirname, 'readers'));// Register all the type readers in the readers folder.
 registry.registerGroupsIn(path.join(__dirname, 'groups'));      // Register all groups in the groups folder.
 registry.registerCommandsIn(path.join(__dirname, 'commands'));  // Register all the commands in the commands folder.
 
