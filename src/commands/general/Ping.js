@@ -14,7 +14,7 @@ class Ping extends Patron.Command
         names: ['ping'],
         groupName: 'general',
         description: 'Test Command',
-        guildOnly: false
+        guildOnly: false,
       });
   }
 

@@ -30,7 +30,7 @@ class AddPlayer extends Patron.Command
                         new Patron.Argument
                             ({
                                 key: 'elo',
-                                name: 'elo',
+                                name: 'elo? = 1200',
                                 type: 'float',
                                 defaultValue: 1200,
                                 example: '1200',
@@ -50,11 +50,9 @@ class AddPlayer extends Patron.Command
         var member = args.member;
         var messageTask = message.channel.send("Adding user: " + member.user.username + "#" + member.user.discriminator);
 
-        var idTracker = await Client.database.Players.findOne({});
-        var count = idTracker.count;
-        var playerId = 'p' + NumberUtil.pad(count, 4);
+        var trackerId = 'p' + NumberUtil.pad(Client.database.generatePlayerTrackerId(), 4);
         var player = new Player();
-        player._id = playerId;
+        player._id = trackerId;
         player.discordId = member.id;
         player.name = member.displayName;
         player.elo = args.elo;
@@ -77,7 +75,6 @@ class AddPlayer extends Patron.Command
                 var response = await messageTask;
                 return response.edit(embed);
             }
-            Client.database.Players.updateOne({}, { $set: { count: ++count } });
 
             embed.setTitle("Added Player");
             embed.setDescription(

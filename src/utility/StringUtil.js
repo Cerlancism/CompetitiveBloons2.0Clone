@@ -18,7 +18,7 @@ class StringUtil
      */
     markdownCodeLinify(string)
     {
-        return "`" + string.replace("`", '\\`') + "`"
+        return "`" + string.replace("`", '') + "`"
     }
 
     /**
@@ -28,7 +28,7 @@ class StringUtil
      */
     markdownCodeBlockify(string, syntaxType = "")
     {
-        return "```" + syntaxType + "\n" + string.replace("```", '\\```') + "\n```"
+        return "```" + syntaxType + "\n" + string.replace("```", '') + "\n```"
     }
 
     /**
@@ -37,7 +37,15 @@ class StringUtil
      */
     extractOneDigitSet(string)
     {
-        return string.match(/\d+/)[0];
+        try
+        {
+            var digits = string.match(/\d+/g)[0];
+            return digits;
+        }
+        catch (error)
+        {
+            return undefined;
+        }
     }
 
     boldify(string)

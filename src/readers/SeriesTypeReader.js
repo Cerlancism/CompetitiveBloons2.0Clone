@@ -1,5 +1,6 @@
 const { TypeReader, TypeReaderResult, Command, Argument } = require('patron.js');
 const { Message } = require('discord.js');
+const Client = require('../structures/client');
 const NumberUtil = require('../utility/NumberUtil.js');
 const StringUtil = require('../utility/StringUtil.js');
 const Database = require('../structures/client.js').database;
@@ -26,13 +27,20 @@ class SeriesTypeReader extends TypeReader
         var parts = message.content.split(" ");
         if (message.mentions.members.size == 2 && parts.length == 5)
         {
-            var getTrackerIdTask = Database.getSeriesTrackerId();
-            await Database.increaseSeriesTrackerId();
-            var player1 = await Database.getPlayerByDiscordId(StringUtil.extractOneDigitSet(parts[1]));
-            var player2 = await Database.getPlayerByDiscordId(StringUtil.extractOneDigitSet(parts[2]));
+            var playerDiscordIds = [StringUtil.extractOneDigitSet(parts[1]), StringUtil.extractOneDigitSet(parts[2])];
+            var players = await Database.getPlayerSetByDiscordId(playerDiscordIds);
+            var player1 = players.find((input) => input.discordId == playerDiscordIds[0]);
+            var player2 = players.find((input) => input.discordId == playerDiscordIds[1]);
             if (!player1 || !player2)
             {
                 return TypeReaderResult.fromError(command, 'player(s) not registered!');
+            }
+
+            /**@type {Number[]} */
+            var adminIds = Client.config.BotAdminIds;
+            if (!adminIds.includes(message.author.id) && message.author.id != player1.discordId)
+            {
+                return TypeReaderResult.fromError(command, 'the submitter has to be player 1!');
             }
 
             if (!isNaN(Number(parts[parts.length - 1])) && !isNaN(Number(parts[parts.length - 2])))
@@ -51,7 +59,8 @@ class SeriesTypeReader extends TypeReader
                 {
                     return TypeReaderResult.fromError(command, 'a score cannot be more than 0');
                 }
-                series._id = "s" + NumberUtil.pad((await getTrackerIdTask), 4);
+                var TrackerId = Database.generateSeriesTrackerId();
+                series._id = "s" + NumberUtil.pad(TrackerId, 4);
                 series.Player1Id = player1._id;
                 series.player2Id = player2._id;
                 series.player1Score = player1wins;

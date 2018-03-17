@@ -12,6 +12,9 @@ class Database
         this.Players;
         this.SeriesPending;
         this.SeriesChain;
+
+        this.PlayerTrackerId;
+        this.SeriesTrackerId;
     }
 
     async initialize(url)
@@ -20,17 +23,40 @@ class Database
         this.db = await dbClient.db(this.DatabaseName);
         Logger.log("Connected to Database!", Logger.LogLevel.INFO);
         var collectionList = await this.db.listCollections().toArray();
-        Logger.debug("Collections in Database: " + collectionList.map((item) => item['name']));
 
         this.Players = await this.db.collection('Players');
         this.SeriesPending = await this.db.collection('SeriesPending');
         this.SeriesChain = await this.db.collection('SeriesChain');
+
+        this.PlayerTrackerId = await this.getPlayerTrackerId();
+        this.SeriesTrackerId = await this.getSeriesTrackerId();
+        Logger.debug("Collections in Database: " + collectionList.map((item) => item['name']));
     }
 
     //#region Player
-    async getPlayerList(limit = 100, byElo = 1)
+    /**
+     * 
+     * @param {Number} limit 
+     * @param {Number} byElo 1 or -1
+     * @returns {Promise<Player[]>}
+     */
+    async getPlayerList(limit = 100, byElo = -1)
     {
         return await this.Players.find({ isRemoved: false }).sort({ elo: byElo }).limit(limit).toArray();
+    }
+
+    /**
+     * 
+     * @param {String[]} ids
+     * @returns {Promise<Player[]>} 
+     */
+    async getPlayerSetByDiscordId(ids)
+    {
+        var regexString = "";
+        ids.forEach((input) => regexString += input + "|");
+        regexString = regexString.slice(0, -1);
+        var queryRegx = new RegExp(regexString);
+        return await this.Players.find({ discordId: queryRegx }).toArray();
     }
 
     /**
@@ -67,13 +93,39 @@ class Database
         }
     }
 
+    async getPlayerTrackerId()
+    {
+        return (await this.Players.findOne({})).count;
+    }
+
+    generatePlayerTrackerId()
+    {
+        var id = this.PlayerTrackerId++;
+        this.Players.updateOne({}, { $set: { count: this.PlayerTrackerId } });
+        return id;
+    }
+
     /**
      * 
      * @param {Player} player 
      */
     async updatePlayer(player)
     {
-        return await this.Players.updateOne({ _id: player._id }, { $set: player });
+        return await this.Players.replaceOne({ _id: player._id }, player);
+    }
+
+    /**
+     * 
+     * @param {Player[]} players 
+     */
+    async updatePlayerSet(players)
+    {
+        var regexString = "";
+        players.forEach((input) => regexString += input._id + "|");
+        regexString = regexString.slice(0, -1);
+        var queryRegx = new RegExp(regexString);
+        await this.Players.deleteMany({ _id: queryRegx });
+        return await this.Players.insertMany(players);
     }
     //#endregion
 
@@ -125,10 +177,11 @@ class Database
         return count;
     }
 
-    async increaseSeriesTrackerId()
+    generateSeriesTrackerId()
     {
-        var count = (await this.SeriesChain.findOne({})).count;
-        return await this.SeriesChain.updateOne({}, { $set: { count: ++count } });
+        var id = this.SeriesTrackerId++;
+        this.SeriesChain.updateOne({}, { $set: { count: this.SeriesTrackerId } });
+        return id;
     }
 
     async getSeriesChainList(limit = 10, lastest = true)

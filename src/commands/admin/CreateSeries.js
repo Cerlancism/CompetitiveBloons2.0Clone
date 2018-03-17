@@ -58,13 +58,6 @@ class CreateSeries extends Patron.Command
 
         Series.calculateELO(series, player1, player2);
 
-        delete series.player1;
-        delete series.player2;
-
-        await Client.database.approveSeries(series);
-        await Client.database.updatePlayer(player1);
-        await Client.database.updatePlayer(player2);
-
         var randomColour = Constants.getRandomColor();
         var embed = new Discord.RichEmbed()
             .setColor(randomColour)
@@ -72,7 +65,15 @@ class CreateSeries extends Patron.Command
             .setDescription(StringUtil.boldify("Series Id: ") + series._id)
             .addField("Player 1", StringUtil.markdownCodeLinify(player1.elo.toFixed(0)) + " " + player1.name, true)
             .addField("Player 2", StringUtil.markdownCodeLinify(player2.elo.toFixed(0)) + " " + player2.name, true);
-        return await message.channel.send(embed);
+        var messageTask = message.channel.send(embed);
+
+        delete series.player1;
+        delete series.player2;
+
+        Client.database.approveSeries(series);
+        await Client.database.updatePlayerSet([player1, player2]);
+
+        return await messageTask;
     }
 }
 
