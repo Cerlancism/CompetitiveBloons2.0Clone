@@ -28,7 +28,7 @@ class SeriesTypeReader extends TypeReader
         if (message.mentions.members.size == 2 && parts.length == 5)
         {
             var playerDiscordIds = [StringUtil.extractOneDigitSet(parts[1]), StringUtil.extractOneDigitSet(parts[2])];
-            var players = await Database.getPlayerSetByDiscordId(playerDiscordIds);
+            var players = await Database.getPlayerSetByDiscordIds(playerDiscordIds);
             var player1 = players.find((input) => input.discordId == playerDiscordIds[0]);
             var player2 = players.find((input) => input.discordId == playerDiscordIds[1]);
             if (!player1 || !player2)
@@ -61,7 +61,7 @@ class SeriesTypeReader extends TypeReader
                 }
                 var TrackerId = Database.generateSeriesTrackerId();
                 series._id = "s" + NumberUtil.pad(TrackerId, 4);
-                series.Player1Id = player1._id;
+                series.player1Id = player1._id;
                 series.player2Id = player2._id;
                 series.player1Score = player1wins;
                 series.player2Score = player2wins;

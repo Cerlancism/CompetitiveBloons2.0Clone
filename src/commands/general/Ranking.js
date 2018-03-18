@@ -21,7 +21,7 @@ class Ranking extends Patron.Command
             ({
                 names: ['ranking', 'rankings', 'lb'],
                 groupName: 'general',
-                description: 'Display the overall leader board of at most 100 players',
+                description: 'Display the overall leaderboard of at most 50 players',
             });
     }
 
@@ -40,10 +40,10 @@ class Ranking extends Patron.Command
         var randomColour = Constants.getRandomColor();
         var embed = new Discord.RichEmbed()
             .setColor(randomColour)
-            .setTitle("Competitive Bloons 2 Rankings")
+            .setTitle("Competitive Bloons 2.0 Rankings")
             .setDescription("If you are in the **To Be Determined (TBD)** section, you have to play the amount games left stated to calibrate your ELO.")
-            .addField("High Tier", getRankingTierString(highTier))
-            .addField("Low Tier", getRankingTierString(lowTier))
+            .addField("High Tier (ELO >= 1200)", getRankingTierString(highTier))
+            .addField("Low Tier (ELO < 1200)", getRankingTierString(lowTier))
             .addField("To Be Determined", getRankingTierString(TBDPlayers, true))
             .setTimestamp(new Date());
         message.channel.send(embed);
@@ -59,9 +59,9 @@ class Ranking extends Patron.Command
             {
                 var element = playerTier[index];
                 tierString +=
-                    StringUtil.boldify("#" + getRankValue() + " ") +
-                    element.name + "\t" +
-                    StringUtil.markdownCodeLinify(Player.getDisplayELO(element)) +
+                    StringUtil.markdownCodeLinify("#" + NumberUtil.pad(getRankValue(), 2)) + " \t " +
+                    StringUtil.markdownCodeLinify(Player.getDisplayELO(element)) + " \t " +
+                    StringUtil.boldify(element.name) +
                     "\n";
 
                 function getRankValue()

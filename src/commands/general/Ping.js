@@ -19,9 +19,9 @@ class Ping extends Patron.Command
   }
 
   /** 
-   * @param {Message} param 
+   * @param {Message} msg 
    */
-  async run(param)
+  async run(msg)
   {
     var dbPingStart = Date.now();
     var dbPingTask = Client.database.db.admin().ping();
@@ -33,8 +33,8 @@ class Ping extends Patron.Command
     embed.setDescription("Pong!");
 
     /**@type {Message} */
-    var response = await param.channel.send(StringUtil.markdownCodeLinify("Loading..."));
-    var BotDelay = response.createdAt.getTime() - param.createdAt.getTime();
+    var response = await msg.channel.send(StringUtil.markdownCodeLinify("Loading..."));
+    var BotDelay = response.createdAt.getTime() - msg.createdAt.getTime();
 
     var pingResponse = await dbPingTask;
     var DatabaseDelay = pingResponse.ok == 1 ? (Date.now() - dbPingStart) : "Error";

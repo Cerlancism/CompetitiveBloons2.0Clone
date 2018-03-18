@@ -25,7 +25,6 @@ class Database
         var collectionList = await this.db.listCollections().toArray();
 
         this.Players = await this.db.collection('Players');
-        this.SeriesPending = await this.db.collection('SeriesPending');
         this.SeriesChain = await this.db.collection('SeriesChain');
 
         this.PlayerTrackerId = await this.getPlayerTrackerId();
@@ -33,16 +32,16 @@ class Database
         Logger.debug("Collections in Database: " + collectionList.map((item) => item['name']));
     }
 
-    //#region Player
+    //#region Player ----------------------------------------------------------------------------------------
     /**
      * 
      * @param {Number} limit 
-     * @param {Number} byElo 1 or -1
+     * @param {Boolean} byElo
      * @returns {Promise<Player[]>}
      */
-    async getPlayerList(limit = 100, byElo = -1)
+    async getPlayerList(limit = 50, byElo = false)
     {
-        return await this.Players.find({ isRemoved: false }).sort({ elo: byElo }).limit(limit).toArray();
+        return await this.Players.find({ isRemoved: false }).sort({ elo: byElo ? 1 : -1 }).limit(limit).toArray();
     }
 
     /**
@@ -50,13 +49,27 @@ class Database
      * @param {String[]} ids
      * @returns {Promise<Player[]>} 
      */
-    async getPlayerSetByDiscordId(ids)
+    async getPlayerSetByDiscordIds(ids)
     {
         var regexString = "";
         ids.forEach((input) => regexString += input + "|");
         regexString = regexString.slice(0, -1);
         var queryRegx = new RegExp(regexString);
         return await this.Players.find({ discordId: queryRegx }).toArray();
+    }
+
+    /**
+     * 
+     * @param {String[]} ids
+     * @returns {Promise<Player[]>} 
+     */
+    async getPlayerSetByIds(ids)
+    {
+        var regexString = "";
+        ids.forEach((input) => regexString += input + "|");
+        regexString = regexString.slice(0, -1);
+        var queryRegx = new RegExp(regexString);
+        return await this.Players.find({ _id: queryRegx }).toArray();
     }
 
     /**
@@ -129,45 +142,13 @@ class Database
     }
     //#endregion
 
-    //#region Pending Series
-    /**
-     * 
-     * @param {Series} series 
-     */
-    async createPeningSeries(series)
-    {
-
-    }
-
-    async getPendingSeriesList(limit = 10, latest = false)
-    {
-
-    }
-
-    async getPendingSeriesById(id)
-    {
-
-    }
-
-    async approvePendingSeriesList()
-    {
-
-    }
-
-    async deletePendingSeriesById(id)
-    {
-
-    }
-    //#endregion
-
-    //#region Series Chain (Approved Series History)
+    //#region Series Chain (Approved Series History) --------------------------------------------------------
     /**
      * 
      * @param {Series} series 
      */
     async approveSeries(series)
     {
-        await this.SeriesPending.deleteOne({ _id: series._id }).catch((err) => Logger.handleError(err));
         return await this.SeriesChain.insertOne(series);
     }
 
@@ -184,9 +165,19 @@ class Database
         return id;
     }
 
-    async getSeriesChainList(limit = 10, lastest = true)
+    async getOneSerieByIds(id)
     {
+        return await this.SeriesChain.findOne({ _id: id });
+    }
 
+    async deleteOneSeriesbyId(id)
+    {
+        return await this.SeriesChain.deleteOne({ _id: id });
+    }
+
+    async getSeriesChainList(limit = 10, sortDate = false)
+    {
+        return await this.SeriesChain.find({ _id: { $gt: "s0001" } }).sort({ date: sortDate ? 1 : -1 }).limit(limit).toArray();
     }
     //#endregion
 

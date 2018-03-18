@@ -12,7 +12,7 @@ class Series
     {
         this._id = id;
         this.date = date;
-        this.Player1Id = Player1Id;
+        this.player1Id = Player1Id;
         this.player1Score = player1Score;
         this.player2Id = player2id;
         this.player2Score = player2Score;

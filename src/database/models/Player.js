@@ -19,7 +19,7 @@ class Player
         this.name = name;
         this.elo = elo;
         this.wins = wins;
-        this.loss = loss;
+        this.losses = loss;
         this.seriesHistoryIds = seriesHistoryIds;
         this.eloHistory = eloHistory;
         this.isRemoved = false;

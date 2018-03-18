@@ -13,15 +13,15 @@ const SeriesModel = require('../../database/models/Series');
 const Player = require('../../components/Player.js');
 const Series = require('../../components/Series.js');
 
-class CreateSeries extends Patron.Command
+class Submit extends Patron.Command
 {
     constructor()
     {
         super
             ({
-                names: ['createseries', 'cs'],
-                groupName: 'admin',
-                description: 'Create a series into the ranking system.',
+                names: ['submit'],
+                groupName: 'general',
+                description: 'Submit a series into the series pending list.',
                 args:
                     [
                         new Patron.Argument
@@ -31,7 +31,8 @@ class CreateSeries extends Patron.Command
                                 type: 'series',
                                 example: '@Winner#1234 @Losser#1234 2 1',
                             }),
-                    ]
+                    ],
+                cooldown: 60000
             });
     }
 
@@ -48,6 +49,11 @@ class CreateSeries extends Patron.Command
         /**@type {PlayerModel} */
         var player2 = series.player2;
 
+        if (message.author.id == player1.discordId)
+        {
+            player1.name = message.member.displayName;
+        }
+
         player1.wins += series.player1Score;
         player2.wins += series.player2Score;
         player1.losses += series.player2Score;
@@ -61,10 +67,10 @@ class CreateSeries extends Patron.Command
         var randomColour = Constants.getRandomColor();
         var embed = new Discord.RichEmbed()
             .setColor(randomColour)
-            .setTitle("Created Series")
+            .setTitle("Submitted Series")
             .setDescription(StringUtil.boldify("Series Id: ") + series._id)
-            .addField("Player 1", StringUtil.markdownCodeLinify(player1.elo.toFixed(2)) + " " + player1.name, true)
-            .addField("Player 2", StringUtil.markdownCodeLinify(player2.elo.toFixed(2)) + " " + player2.name, true);
+            .addField("Player 1", StringUtil.markdownCodeLinify(Player.getDisplayELO(player1)) + " " + player1.name, true)
+            .addField("Player 2", StringUtil.markdownCodeLinify(Player.getDisplayELO(player2)) + " " + player2.name, true);
         var messageTask = message.channel.send(embed);
 
         delete series.player1;
@@ -77,4 +83,4 @@ class CreateSeries extends Patron.Command
     }
 }
 
-module.exports = new CreateSeries();
+module.exports = new Submit();

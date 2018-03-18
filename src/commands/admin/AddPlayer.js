@@ -34,8 +34,24 @@ class AddPlayer extends Patron.Command
                                 type: 'float',
                                 defaultValue: 1200,
                                 example: '1200',
+                            }),
+                        new Patron.Argument
+                            ({
+                                key: 'wins',
+                                name: 'wins? = 0',
+                                type: 'int',
+                                defaultValue: 0,
+                                example: '0',
+                            }),
+                        new Patron.Argument
+                            ({
+                                key: 'losses',
+                                name: 'losses? = 0',
+                                type: 'int',
+                                defaultValue: 0,
+                                example: '0',
                                 remainder: true
-                            })
+                            }),
                     ]
             });
     }
@@ -56,6 +72,9 @@ class AddPlayer extends Patron.Command
         player.discordId = member.id;
         player.name = member.displayName;
         player.elo = args.elo;
+        player.wins = args.wins;
+        player.losses = args.losses;
+        player.eloHistory.push(args.elo);
 
         var embed = new Discord.RichEmbed();
         var randomColour = Constants.getRandomColor();
@@ -81,7 +100,9 @@ class AddPlayer extends Patron.Command
                 StringUtil.boldify("Added Player: ") + player.name + "\n" +
                 StringUtil.boldify("Player Id: ") + player._id + "\n" +
                 StringUtil.boldify("Discord Id: ") + player.discordId + "\n" +
-                StringUtil.boldify("ELO: ") + player.elo);
+                StringUtil.boldify("ELO: ") + player.elo + "\n" +
+                StringUtil.boldify("Wins: ") + player.wins + "\n" +
+                StringUtil.boldify("Losses: ") + player.losses);
             embed.setFooter("Join date");
             embed.setTimestamp(player.joinDate);
 

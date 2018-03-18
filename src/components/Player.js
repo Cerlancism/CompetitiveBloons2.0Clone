@@ -15,7 +15,7 @@ class Player
      */
     getTotalGames(player)
     {
-        return player.wins + player.loss;
+        return player.wins + player.losses;
     }
 
     /**

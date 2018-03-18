@@ -1,5 +1,15 @@
 class NumberUtil
 {
+  constructor()
+  {
+    this.FullWidthNumbers = ['０', '１', '２', '３', '４', '５', '６', '７', '８', '９'];
+  }
+
+  /**
+   * 
+   * @param {Number} num 
+   * @param {Number} size
+   */
   pad(num, size)
   {
     let s = num.toString();
@@ -10,6 +20,17 @@ class NumberUtil
     }
 
     return s;
+  }
+
+  fullWidthPad(num, size)
+  {
+    var numbers = this.pad(num, size);
+    var fullWidthString = "";
+    for (var index = 0; index < numbers.length; index++)
+    {
+      fullWidthString += this.FullWidthNumbers[Number.parseInt(numbers[index])];
+    }
+    return fullWidthString;
   }
 
   msToTime(s)
